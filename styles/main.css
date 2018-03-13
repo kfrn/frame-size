@@ -5,7 +5,6 @@ body {
 }
 
 #container {
-  /*margin: 1em auto;*/
   padding: 1em;
 }
 
@@ -74,4 +73,32 @@ div.app-footer {
 
 #main-content {
   text-align: center;
+}
+
+#select-aspect-ratio {
+  display: flex;
+  justify-content: center;
+}
+
+#select-aspect-ratio .field-body {
+  flex-grow: 0 !important; /* overriding Bulma */
+}
+
+.field {
+  margin: 0 1em 1em 1em !important; /* overriding Bulma */
+}
+
+/*------- CALCULATOR -------*/
+
+#number-inputs {
+  display: flex;
+  justify-content: center;
+}
+
+#number-inputs .field {
+  margin: 0 1em 1em 0;
+}
+
+#number-inputs input {
+  max-width: 100px;
 }
