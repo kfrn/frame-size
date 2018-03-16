@@ -75,12 +75,12 @@ div.app-footer {
   text-align: center;
 }
 
-#select-aspect-ratio {
+.select-ratio {
   display: flex;
   justify-content: center;
 }
 
-#select-aspect-ratio .field-body {
+.select-ratio .field-body {
   flex-grow: 0 !important; /* overriding Bulma */
 }
 

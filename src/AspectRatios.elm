@@ -1,5 +1,7 @@
 module AspectRatios exposing (..)
 
+import Types exposing (..)
+
 
 type AspectRatio
     = Academy
@@ -15,8 +17,8 @@ allAspectRatios =
     [ Academy, SD, HD, WidescreenEU, Widescreen185, Widescreen239 ]
 
 
-aspectRatioDisplayName : AspectRatio -> String
-aspectRatioDisplayName ratio =
+displayNameForAspectRatio : AspectRatio -> String
+displayNameForAspectRatio ratio =
     case ratio of
         Academy ->
             "Academy (1.375:1)"

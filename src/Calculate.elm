@@ -1,30 +1,18 @@
 module Calculate exposing (..)
 
 import AspectRatios exposing (AspectRatio(..))
+import PixelAspectRatio exposing (PAR(..), sdHeight, sdWidth)
+import Types exposing (..)
 
 
-type alias Range =
-    { height : Height
-    , width : Width
-    }
-
-
-type alias Width =
-    Float
-
-
-type alias Height =
-    Float
-
-
-heightFromWidth : AspectRatio -> (Width -> Height)
-heightFromWidth ratio =
+heightFromWidth : AspectRatio -> PAR -> (Width -> Height)
+heightFromWidth ratio par =
     case ratio of
         Academy ->
             academyHeight
 
         SD ->
-            sdHeight
+            sdHeight par
 
         HD ->
             hdHeight
@@ -39,14 +27,14 @@ heightFromWidth ratio =
             widescreen239Height
 
 
-widthFromHeight : AspectRatio -> (Height -> Width)
-widthFromHeight ratio =
+widthFromHeight : AspectRatio -> PAR -> (Height -> Width)
+widthFromHeight ratio par =
     case ratio of
         Academy ->
             academyWidth
 
         SD ->
-            sdWidth
+            sdWidth par
 
         HD ->
             hdWidth
@@ -69,16 +57,6 @@ academyHeight width =
 academyWidth : Height -> Width
 academyWidth height =
     height * 1.375
-
-
-sdHeight : Width -> Height
-sdHeight width =
-    (width / 4) * 3
-
-
-sdWidth : Height -> Width
-sdWidth height =
-    (height / 3) * 4
 
 
 hdHeight : Width -> Height

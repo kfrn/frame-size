@@ -1,11 +1,12 @@
 module View exposing (view)
 
-import AspectRatios exposing (AspectRatio(..), allAspectRatios, aspectRatioDisplayName)
+import AspectRatios exposing (AspectRatio(..), allAspectRatios, displayNameForAspectRatio)
 import Html exposing (Html, div, em, h1, i, img, input, label, nav, p, span, text)
 import Html.Attributes exposing (attribute, class, id, placeholder, src, type_, value)
 import Html.Events exposing (onInput)
 import Links exposing (LinkName(..), link)
 import Model exposing (Model)
+import PixelAspectRatio exposing (..)
 import Round
 import Update exposing (Msg(..))
 import ViewHelpers exposing (renderSelect)
@@ -54,28 +55,59 @@ pageContent model =
         , referenceImage model.aspectRatio
         , div [] [ text <| "current width is: " ++ toString model.width ]
         , div [] [ text <| "current height is: " ++ toString model.height ]
+        , div [] [ text <| "current par is: " ++ toString model.par ]
         ]
 
 
 calculator : Model -> Html Msg
 calculator model =
     div [ id "calculator" ]
-        [ selectAspectRatio model.aspectRatio
+        [ selectRatios model
         , inputFields model
+        ]
+
+
+selectRatios : Model -> Html Msg
+selectRatios model =
+    div []
+        [ selectAspectRatio model.aspectRatio
+        , selectPAR model
         ]
 
 
 selectAspectRatio : AspectRatio -> Html Msg
 selectAspectRatio currentAR =
-    div [ id "select-aspect-ratio" ]
+    div [ class "select-ratio" ]
         [ div [ class "field is-horizontal" ]
             [ div [ class "field-label is-normal" ]
                 [ label [] [ text "Choose aspect ratio: " ]
                 ]
             , div [ class "field-body" ]
-                [ renderSelect currentAR ChangeAspectRatio aspectRatioDisplayName allAspectRatios ]
+                [ renderSelect currentAR ChangeAspectRatio displayNameForAspectRatio allAspectRatios ]
             ]
         ]
+
+
+selectPAR : Model -> Html Msg
+selectPAR model =
+    let
+        parSelect =
+            div [ class "field is-horizontal" ]
+                [ div [ class "field-label is-normal" ]
+                    [ label [] [ text "Choose a pixel aspect ratio: " ]
+                    ]
+                , div [ class "field-body" ]
+                    [ renderSelect model.par ChangePAR displayNameForPAR allPARs ]
+                ]
+    in
+    case model.aspectRatio of
+        SD ->
+            div [ class "select-ratio" ]
+                [ parSelect
+                ]
+
+        _ ->
+            div [] []
 
 
 inputFields : Model -> Html Msg
@@ -83,14 +115,14 @@ inputFields model =
     div [ id "number-inputs" ]
         [ div [ class "field is-horizontal" ]
             [ div [ class "field-label is-normal" ]
-                [ label [] [ text "Height: " ]
+                [ label [] [ text "Width: " ]
                 ]
             , div [ class "field-body" ]
                 [ createInput model.width UpdateWidth ]
             ]
         , div [ class "field is-horizontal" ]
             [ div [ class "field-label is-normal" ]
-                [ label [] [ text "Width: " ]
+                [ label [] [ text "Height: " ]
                 ]
             , div [ class "field-body" ]
                 [ createInput model.height UpdateHeight ]
