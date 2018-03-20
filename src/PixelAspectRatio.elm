@@ -21,10 +21,10 @@ displayNameForPAR par =
             "Square"
 
         NTSC ->
-            "NTSC"
+            "480i (NTSC), 10/11"
 
         PAL ->
-            "PAL"
+            "576i (PAL), 59/54"
 
 
 sdWidth : PAR -> Height -> Width

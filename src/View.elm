@@ -1,9 +1,9 @@
 module View exposing (view)
 
 import AspectRatios exposing (AspectRatio(..), allAspectRatios, displayNameForAspectRatio)
-import Html exposing (Html, div, em, h1, i, img, input, label, nav, p, span, text)
+import Html exposing (Html, b, button, div, em, h1, i, img, input, label, nav, p, span, text)
 import Html.Attributes exposing (attribute, class, id, placeholder, src, type_, value)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onClick, onInput)
 import Links exposing (LinkName(..), link)
 import Model exposing (Model)
 import PixelAspectRatio exposing (..)
@@ -91,6 +91,14 @@ selectAspectRatio currentAR =
 selectPAR : Model -> Html Msg
 selectPAR model =
     let
+        iconClass =
+            case model.helpPanelOpen of
+                False ->
+                    "fa-question-circle"
+
+                True ->
+                    "fa-caret-up"
+
         parSelect =
             div [ class "field is-horizontal" ]
                 [ div [ class "field-label is-normal" ]
@@ -98,15 +106,45 @@ selectPAR model =
                     ]
                 , div [ class "field-body" ]
                     [ renderSelect model.par ChangePAR displayNameForPAR allPARs ]
+                , button
+                    [ class "button", id "par-help", onClick ToggleHelpPanel ]
+                    [ span [ class "icon" ] [ i [ class <| "fa " ++ iconClass ] [] ] ]
                 ]
     in
     case model.aspectRatio of
         SD ->
-            div [ class "select-ratio" ]
-                [ parSelect
+            div []
+                [ div [ class "select-ratio" ] [ parSelect ]
+                , div [] [ helpPanel model.helpPanelOpen ]
                 ]
 
         _ ->
+            div [] []
+
+
+helpPanel : Bool -> Html Msg
+helpPanel panelOpen =
+    case panelOpen of
+        True ->
+            div [ id "help-panel" ]
+                [ p []
+                    [ p [] [ b [] [ text "Wait - non-square pixels?" ] ]
+                    , p []
+                        [ text "SD video pixels are generally not square. "
+                        , link PARArticle
+                        , text "."
+                        ]
+                    ]
+                , p []
+                    [ p [] [ b [] [ text "Why aren't I seeing 720x576 (for 576i) or 720x480 (for 480i)?" ] ]
+                    , p []
+                        [ link Rec601
+                        , text " specifies a sampling rate of 13.5 MHz per video scanline, which actually yields ~703-704 ‘active’ pixels for each scanline. In practice, 720 (or sometimes 704) pixels are captured, allowing for some headroom."
+                        ]
+                    ]
+                ]
+
+        False ->
             div [] []
 
 

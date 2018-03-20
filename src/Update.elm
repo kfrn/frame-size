@@ -11,6 +11,7 @@ type Msg
     | UpdateWidth String
     | UpdateHeight String
     | ChangePAR PAR
+    | ToggleHelpPanel
     | NoOp
 
 
@@ -67,11 +68,18 @@ update msg model =
 
         ChangePAR newPAR ->
             let
-                newHeight =
-                    model.width |> heightFromWidth model.aspectRatio newPAR
+                newWidth =
+                    model.height |> widthFromHeight model.aspectRatio newPAR
 
                 newModel =
-                    { model | par = newPAR, height = newHeight }
+                    { model | par = newPAR, width = newWidth }
+            in
+            ( newModel, Cmd.none )
+
+        ToggleHelpPanel ->
+            let
+                newModel =
+                    { model | helpPanelOpen = not model.helpPanelOpen }
             in
             ( newModel, Cmd.none )
 

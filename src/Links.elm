@@ -6,6 +6,8 @@ import Html.Attributes exposing (class, href)
 
 type LinkName
     = Email
+    | PARArticle
+    | Rec601
     | SourceCode
 
 
@@ -18,6 +20,14 @@ link name =
                     [ i [ class "fa fa-envelope" ] []
                     ]
                 ]
+
+        PARArticle ->
+            a [ href "https://bavc.org/blog/par-sar-and-dar-making-sense-standard-definition-sd-video-pixels" ]
+                [ text "Read more here" ]
+
+        Rec601 ->
+            a [ href "https://en.wikipedia.org/wiki/Rec._601" ]
+                [ text "Rec.601" ]
 
         SourceCode ->
             a [ href "#" ]

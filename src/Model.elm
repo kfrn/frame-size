@@ -10,6 +10,7 @@ type alias Model =
     , height : Float
     , width : Float
     , par : PAR
+    , helpPanelOpen : Bool
     }
 
 
@@ -29,6 +30,7 @@ init =
       , width = w
       , height = w |> heightFromWidth ratio par
       , par = par
+      , helpPanelOpen = False
       }
     , Cmd.none
     )

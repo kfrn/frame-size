@@ -88,6 +88,10 @@ div.app-footer {
   margin: 0 1em 1em 1em !important; /* overriding Bulma */
 }
 
+#par-help {
+  margin-left: 1em;
+}
+
 /*------- CALCULATOR -------*/
 
 #number-inputs {
@@ -100,5 +104,22 @@ div.app-footer {
 }
 
 #number-inputs input {
-  max-width: 100px;
+  max-width: 130px;
+}
+
+#number-inputs input::placeholder {
+  font-size: 0.8em;
+}
+
+#help-panel {
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 1em;
+
+  margin: 0 auto 1em auto;
+  max-width: 70%;
+}
+
+#help-panel p:not(:last-child) {
+  margin-bottom: 0.5em;
 }
