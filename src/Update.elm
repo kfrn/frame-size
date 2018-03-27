@@ -29,7 +29,9 @@ update msg model =
                             Square
 
                 newHeight =
-                    model.width |> heightFromWidth newRatio newPAR
+                    model.width
+                        |> Maybe.andThen
+                            (\w -> Just <| heightFromWidth newRatio newPAR w)
 
                 newModel =
                     { model | aspectRatio = newRatio, height = newHeight, par = newPAR }
@@ -41,35 +43,37 @@ update msg model =
                 Ok width ->
                     let
                         newHeight =
-                            width |> heightFromWidth model.aspectRatio model.par
+                            Just <| heightFromWidth model.aspectRatio model.par width
 
                         newModel =
-                            { model | width = width, height = newHeight }
+                            { model | width = Just width, height = newHeight }
                     in
                     ( newModel, Cmd.none )
 
                 Err e ->
-                    ( model, Cmd.none )
+                    ( unsetDimensions model, Cmd.none )
 
         UpdateHeight h ->
             case String.toFloat h of
                 Ok height ->
                     let
                         newWidth =
-                            height |> widthFromHeight model.aspectRatio model.par
+                            Just <| widthFromHeight model.aspectRatio model.par height
 
                         newModel =
-                            { model | height = height, width = newWidth }
+                            { model | height = Just height, width = newWidth }
                     in
                     ( newModel, Cmd.none )
 
                 Err e ->
-                    ( model, Cmd.none )
+                    ( unsetDimensions model, Cmd.none )
 
         ChangePAR newPAR ->
             let
                 newWidth =
-                    model.height |> widthFromHeight model.aspectRatio newPAR
+                    model.height
+                        |> Maybe.andThen
+                            (\h -> Just <| widthFromHeight model.aspectRatio newPAR h)
 
                 newModel =
                     { model | par = newPAR, width = newWidth }
@@ -85,3 +89,8 @@ update msg model =
 
         NoOp ->
             ( model, Cmd.none )
+
+
+unsetDimensions : Model -> Model
+unsetDimensions model =
+    { model | width = Nothing, height = Nothing }

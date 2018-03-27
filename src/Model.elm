@@ -7,8 +7,8 @@ import PixelAspectRatio exposing (PAR(..))
 
 type alias Model =
     { aspectRatio : AspectRatio
-    , height : Float
-    , width : Float
+    , height : Maybe Float
+    , width : Maybe Float
     , par : PAR
     , helpPanelOpen : Bool
     }
@@ -27,8 +27,8 @@ init =
             Square
     in
     ( { aspectRatio = ratio
-      , width = w
-      , height = w |> heightFromWidth ratio par
+      , width = Just w
+      , height = Just <| heightFromWidth ratio par w
       , par = par
       , helpPanelOpen = False
       }

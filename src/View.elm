@@ -2,7 +2,7 @@ module View exposing (view)
 
 import AspectRatios exposing (AspectRatio(..), allAspectRatios, displayNameForAspectRatio)
 import Html exposing (Html, b, button, div, em, h1, i, img, input, label, nav, p, span, text)
-import Html.Attributes exposing (attribute, class, id, placeholder, src, type_, value)
+import Html.Attributes exposing (attribute, class, id, placeholder, src, step, type_, value)
 import Html.Events exposing (onClick, onInput)
 import Links exposing (LinkName(..), link)
 import Model exposing (Model)
@@ -168,25 +168,38 @@ inputFields model =
         ]
 
 
-createInput : Float -> (String -> Msg) -> Html Msg
-createInput val message =
+createInput : Maybe Float -> (String -> Msg) -> Html Msg
+createInput mVal message =
     let
-        roundNumber r =
-            r == (toFloat <| floor r)
+        roundNumber num =
+            num == (toFloat <| floor num)
 
-        numForDisplay =
+        oneDecimalPlace num =
+            toString num == Round.round 1 num
+
+        numForDisplay val =
             if roundNumber val then
                 toString val
+            else if oneDecimalPlace val then
+                Round.round 1 val
             else
                 Round.round 2 val
+
+        ( inputValue, placeholderText ) =
+            case mVal of
+                Just value ->
+                    ( numForDisplay value, numForDisplay value )
+
+                Nothing ->
+                    ( "", "Enter a num" )
     in
     input
         [ class "input"
         , type_ "number"
-        , placeholder numForDisplay
+        , placeholder placeholderText
+        , step "0.01"
         , onInput message
-
-        -- , value numForDisplay
+        , value inputValue
         ]
         []
 
