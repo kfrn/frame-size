@@ -208,7 +208,7 @@ referenceImage : AspectRatio -> Html Msg
 referenceImage ratio =
     let
         imgSrc =
-            "/images/prince_guitar_" ++ namePart ++ ".jpg"
+            "%PUBLIC_URL%/images/prince_guitar_" ++ namePart ++ ".jpg"
 
         namePart =
             case ratio of
