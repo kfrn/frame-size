@@ -1,5 +1,12 @@
-tba
+# [frame size](https://kfrn.github.io/frame-size/)
 
+Want an easy way to get a video frame size for a specific aspect ratio? Look no further than this calculator!
+
+This is just something I made for fun - mainly to practice getting CSS transitions to work in Elm.
+
+**frame size** is a sister project to my other projects [**reel time**](https://kfrn.github.io/reel-time) and [**film figures**](https://kfrn.github.io/film-figures).
+
+Suggestions and contributions are welcome! I'm happy to receive feature requests, bug reports, code changes, general comments, etc. You can submit a github issue (or pull request), or [email me](mailto:kfnagels@gmail.com) directly.
 
 ### Local setup
 
@@ -9,8 +16,8 @@ Dependencies:
 
 To run locally:
 ```
-git clone URL_HERE!!!!
-cd aspect-ratio-calculator/
+git clone git@github.com:kfrn/frame-size.git
+cd frame-size/
 elm-package install
 npm install -g create-elm-app
 elm-app start
