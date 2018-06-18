@@ -1,18 +1,12 @@
-module Update exposing (Msg(..), update)
+module Update exposing (update)
 
+import Animation
+import Animation.Messenger
 import AspectRatios exposing (AspectRatio(..))
 import Calculate exposing (heightFromWidth, widthFromHeight)
+import Messages exposing (Msg(..))
 import Model exposing (Model)
 import PixelAspectRatio exposing (PAR(..))
-
-
-type Msg
-    = ChangeAspectRatio AspectRatio
-    | UpdateWidth String
-    | UpdateHeight String
-    | ChangePAR PAR
-    | ToggleHelpPanel
-    | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -80,12 +74,44 @@ update msg model =
             in
             ( newModel, Cmd.none )
 
-        ToggleHelpPanel ->
+        Animate animMsg ->
             let
-                newModel =
-                    { model | helpPanelOpen = not model.helpPanelOpen }
+                ( newStyle, cmd ) =
+                    Animation.Messenger.update animMsg model.parStyle
             in
-            ( newModel, Cmd.none )
+            ( { model | parStyle = newStyle }, cmd )
+
+        FadeIn msg ->
+            let
+                newStyle =
+                    Animation.interrupt
+                        [ Animation.to
+                            [ Animation.opacity 1
+                            ]
+                        , Animation.Messenger.send msg
+                        ]
+                        model.parStyle
+            in
+            ( { model | parStyle = newStyle }, Cmd.none )
+
+        OpenHelpPanel ->
+            ( { model | helpPanelOpen = True }, Cmd.none )
+
+        FadeOut msg ->
+            let
+                newStyle =
+                    Animation.interrupt
+                        [ Animation.to
+                            [ Animation.opacity 0
+                            ]
+                        , Animation.Messenger.send msg
+                        ]
+                        model.parStyle
+            in
+            ( { model | parStyle = newStyle }, Cmd.none )
+
+        CloseHelpPanel ->
+            ( { model | helpPanelOpen = False }, Cmd.none )
 
         NoOp ->
             ( model, Cmd.none )

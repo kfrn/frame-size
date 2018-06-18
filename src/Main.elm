@@ -1,8 +1,10 @@
 module Main exposing (..)
 
+import Animation
 import Html exposing (program)
+import Messages exposing (Msg(..))
 import Model exposing (Model, init)
-import Update exposing (Msg(..), update)
+import Update exposing (update)
 import View exposing (view)
 
 
@@ -12,5 +14,10 @@ main =
         { view = view
         , init = init
         , update = update
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Animation.subscription Animate [ model.parStyle ]

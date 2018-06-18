@@ -5,7 +5,7 @@ import Html.Attributes exposing (class, selected)
 import Html.Events exposing (on)
 import Json.Decode as Json
 import List.Extra as ListX
-import Update exposing (Msg(..))
+import Messages exposing (Msg(..))
 
 
 renderSelect : a -> (a -> Msg) -> (a -> String) -> List a -> Html Msg

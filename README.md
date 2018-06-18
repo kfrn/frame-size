@@ -2,7 +2,7 @@
 
 Want an easy way to get a video frame size for a specific aspect ratio? Look no further than this calculator!
 
-This is just something I made for fun - mainly to practice getting CSS transitions to work in Elm.
+This is just something I made for fun and to figure out CSS animations in Elm.
 
 **frame size** is a sister project to my other projects [**reel time**](https://kfrn.github.io/reel-time) and [**film figures**](https://kfrn.github.io/film-figures).
 

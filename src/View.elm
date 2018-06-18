@@ -1,14 +1,16 @@
 module View exposing (view)
 
+import Animation
+import Animation.Messenger
 import AspectRatios exposing (AspectRatio(..), allAspectRatios, displayNameForAspectRatio)
 import Html exposing (Html, b, button, div, em, h1, i, img, input, label, nav, p, span, text)
 import Html.Attributes exposing (attribute, class, id, placeholder, src, step, type_, value)
 import Html.Events exposing (onClick, onInput)
 import Links exposing (LinkName(..), link)
+import Messages exposing (Msg(..))
 import Model exposing (Model)
 import PixelAspectRatio exposing (..)
 import Round
-import Update exposing (Msg(..))
 import ViewHelpers exposing (renderSelect)
 
 
@@ -91,13 +93,13 @@ selectAspectRatio currentAR =
 selectPAR : Model -> Html Msg
 selectPAR model =
     let
-        iconClass =
+        ( msg, iconClass ) =
             case model.helpPanelOpen of
                 False ->
-                    "fa-question-circle"
+                    ( FadeIn OpenHelpPanel, "fa-question-circle" )
 
                 True ->
-                    "fa-caret-up"
+                    ( FadeOut CloseHelpPanel, "fa-caret-up" )
 
         parSelect =
             div [ class "field is-horizontal" ]
@@ -107,26 +109,26 @@ selectPAR model =
                 , div [ class "field-body" ]
                     [ renderSelect model.par ChangePAR displayNameForPAR allPARs ]
                 , button
-                    [ class "button", id "par-help", onClick ToggleHelpPanel ]
+                    [ class "button", id "par-help", onClick msg ]
                     [ span [ class "icon" ] [ i [ class <| "fa " ++ iconClass ] [] ] ]
                 ]
     in
     case model.aspectRatio of
         SD ->
             div []
-                [ div [ class "select-ratio" ] [ parSelect ]
-                , div [] [ helpPanel model.helpPanelOpen ]
+                [ div [ id "select-par", class "select-ratio" ] [ parSelect ]
+                , div [] [ helpPanel model.helpPanelOpen model.parStyle ]
                 ]
 
         _ ->
             div [] []
 
 
-helpPanel : Bool -> Html Msg
-helpPanel panelOpen =
+helpPanel : Bool -> Animation.Messenger.State Msg -> Html Msg
+helpPanel panelOpen style =
     case panelOpen of
         True ->
-            div [ id "help-panel" ]
+            div (Animation.render style ++ [ id "help-panel" ])
                 [ p []
                     [ p [] [ b [] [ text "Wait - non-square pixels?" ] ]
                     , p []
