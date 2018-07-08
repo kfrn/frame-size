@@ -7,7 +7,7 @@ import Html exposing (Html, b, button, div, em, h1, i, img, input, label, nav, p
 import Html.Attributes exposing (attribute, class, id, placeholder, src, step, type_, value)
 import Html.Events exposing (onClick, onInput)
 import Links exposing (LinkName(..), link)
-import Messages exposing (Msg(..))
+import Messages exposing (ElementToStyle(..), Msg(..))
 import Model exposing (Model)
 import PixelAspectRatio exposing (..)
 import Round
@@ -94,12 +94,12 @@ selectPAR : Model -> Html Msg
 selectPAR model =
     let
         ( msg, iconClass ) =
-            case model.helpPanelOpen of
+            case model.helpPanel.open of
                 False ->
-                    ( FadeIn OpenHelpPanel, "fa-question-circle" )
+                    ( FadeIn PARHelp OpenHelpPanel, "fa-question-circle" )
 
                 True ->
-                    ( FadeOut CloseHelpPanel, "fa-caret-up" )
+                    ( FadeOut PARHelp CloseHelpPanel, "fa-caret-up" )
 
         parSelect =
             div [ class "field is-horizontal" ]
@@ -117,7 +117,7 @@ selectPAR model =
         SD ->
             div []
                 [ div [ id "select-par", class "select-ratio" ] [ parSelect ]
-                , div [] [ helpPanel model.helpPanelOpen model.parStyle ]
+                , div [] [ helpPanel model.helpPanel.open model.helpPanel.style ]
                 ]
 
         _ ->

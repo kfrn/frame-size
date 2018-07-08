@@ -1,4 +1,4 @@
-module Model exposing (Model, init)
+module Model exposing (HelpPanel, Model, init)
 
 import Animation
 import Animation.Messenger
@@ -13,8 +13,13 @@ type alias Model =
     , height : Maybe Float
     , width : Maybe Float
     , par : PAR
-    , helpPanelOpen : Bool
-    , parStyle : Animation.Messenger.State Msg
+    , helpPanel : HelpPanel
+    }
+
+
+type alias HelpPanel =
+    { open : Bool
+    , style : Animation.Messenger.State Msg
     }
 
 
@@ -30,15 +35,17 @@ init =
         par =
             Square
 
-        style =
+        initStyle =
             Animation.style [ Animation.opacity 1.0 ]
     in
     ( { aspectRatio = ratio
       , width = Just w
       , height = Just <| heightFromWidth ratio par w
       , par = par
-      , helpPanelOpen = False
-      , parStyle = style
+      , helpPanel =
+            { open = False
+            , style = initStyle
+            }
       }
     , Cmd.none
     )

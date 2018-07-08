@@ -4,8 +4,8 @@ import Animation
 import Animation.Messenger
 import AspectRatios exposing (AspectRatio(..))
 import Calculate exposing (heightFromWidth, widthFromHeight)
-import Messages exposing (Msg(..))
-import Model exposing (Model)
+import Messages exposing (ElementToStyle(..), Msg(..))
+import Model exposing (HelpPanel, Model)
 import PixelAspectRatio exposing (PAR(..))
 
 
@@ -76,12 +76,18 @@ update msg model =
 
         Animate animMsg ->
             let
-                ( newStyle, cmd ) =
-                    Animation.Messenger.update animMsg model.parStyle
-            in
-            ( { model | parStyle = newStyle }, cmd )
+                helpPanel =
+                    model.helpPanel
 
-        FadeIn msg ->
+                ( newStyle, cmd ) =
+                    Animation.Messenger.update animMsg model.helpPanel.style
+
+                newHelpPanel =
+                    { helpPanel | style = newStyle }
+            in
+            ( { model | helpPanel = newHelpPanel }, cmd )
+
+        FadeIn elem msg ->
             let
                 newStyle =
                     Animation.interrupt
@@ -90,14 +96,15 @@ update msg model =
                             ]
                         , Animation.Messenger.send msg
                         ]
-                        model.parStyle
+                        (elementToStyle elem model)
             in
-            ( { model | parStyle = newStyle }, Cmd.none )
+            ( setStyle elem newStyle model, Cmd.none )
 
         OpenHelpPanel ->
-            ( { model | helpPanelOpen = True }, Cmd.none )
+            -- TODO: why not toggle this ??
+            ( { model | helpPanel = openHelpPanel model.helpPanel }, Cmd.none )
 
-        FadeOut msg ->
+        FadeOut elem msg ->
             let
                 newStyle =
                     Animation.interrupt
@@ -106,12 +113,12 @@ update msg model =
                             ]
                         , Animation.Messenger.send msg
                         ]
-                        model.parStyle
+                        (elementToStyle elem model)
             in
-            ( { model | parStyle = newStyle }, Cmd.none )
+            ( setStyle elem newStyle model, Cmd.none )
 
         CloseHelpPanel ->
-            ( { model | helpPanelOpen = False }, Cmd.none )
+            ( { model | helpPanel = closeHelpPanel model.helpPanel }, Cmd.none )
 
         NoOp ->
             ( model, Cmd.none )
@@ -120,3 +127,32 @@ update msg model =
 unsetDimensions : Model -> Model
 unsetDimensions model =
     { model | width = Nothing, height = Nothing }
+
+
+setStyle : ElementToStyle -> Animation.Messenger.State Msg -> Model -> Model
+setStyle elem newStyle model =
+    case elem of
+        PARHelp ->
+            { model | helpPanel = setHelpPanelStyle newStyle model.helpPanel }
+
+
+setHelpPanelStyle : Animation.Messenger.State Msg -> HelpPanel -> HelpPanel
+setHelpPanelStyle newStyle panel =
+    { panel | style = newStyle }
+
+
+elementToStyle : ElementToStyle -> Model -> Animation.Messenger.State Msg
+elementToStyle elem model =
+    case elem of
+        PARHelp ->
+            model.helpPanel.style
+
+
+openHelpPanel : HelpPanel -> HelpPanel
+openHelpPanel panel =
+    { panel | open = True }
+
+
+closeHelpPanel : HelpPanel -> HelpPanel
+closeHelpPanel panel =
+    { panel | open = False }

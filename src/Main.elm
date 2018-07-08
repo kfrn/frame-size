@@ -20,4 +20,4 @@ main =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Animation.subscription Animate [ model.parStyle ]
+    Animation.subscription Animate [ model.helpPanel.style ]

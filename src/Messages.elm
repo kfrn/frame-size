@@ -1,8 +1,16 @@
-module Messages exposing (Msg(..))
+module Messages exposing (ElementToStyle(..), Msg(..))
 
 import Animation
 import AspectRatios exposing (AspectRatio)
 import PixelAspectRatio exposing (PAR)
+
+
+type ElementToStyle
+    = PARHelp
+
+
+
+-- | Ratio
 
 
 type Msg
@@ -11,8 +19,8 @@ type Msg
     | UpdateHeight String
     | ChangePAR PAR
     | Animate Animation.Msg
-    | FadeIn Msg
+    | FadeIn ElementToStyle Msg
     | OpenHelpPanel
-    | FadeOut Msg
+    | FadeOut ElementToStyle Msg
     | CloseHelpPanel
     | NoOp
