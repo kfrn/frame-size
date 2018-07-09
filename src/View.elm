@@ -53,12 +53,7 @@ footer =
 pageContent : Model -> Html Msg
 pageContent model =
     div [ id "main-content" ]
-        [ calculator model
-        , referenceImage model.aspectRatio
-        , div [] [ text <| "current width is: " ++ toString model.width ]
-        , div [] [ text <| "current height is: " ++ toString model.height ]
-        , div [] [ text <| "current par is: " ++ toString model.par ]
-        ]
+        [ calculator model, referenceImage model.aspectRatio ]
 
 
 calculator : Model -> Html Msg
@@ -107,10 +102,11 @@ selectPAR model =
                     [ label [] [ text "Choose a pixel aspect ratio: " ]
                     ]
                 , div [ class "field-body" ]
-                    [ renderSelect model.par ChangePAR displayNameForPAR allPARs ]
-                , button
-                    [ class "button", id "par-help", onClick msg ]
-                    [ span [ class "icon" ] [ i [ class <| "fa " ++ iconClass ] [] ] ]
+                    [ renderSelect model.par ChangePAR displayNameForPAR allPARs
+                    , button
+                        [ class "button", id "par-help", onClick msg ]
+                        [ span [ class "icon" ] [ i [ class <| "fa " ++ iconClass ] [] ] ]
+                    ]
                 ]
     in
     case model.aspectRatio of

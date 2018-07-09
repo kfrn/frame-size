@@ -30,7 +30,7 @@ link name =
                 [ text "Rec.601" ]
 
         SourceCode ->
-            a [ href "#" ]
+            a [ href "https://github.com/kfrn/frame-size" ]
                 [ span [ class "icon" ]
                     [ i [ class "fa fa-github" ] []
                     ]
