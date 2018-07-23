@@ -88,13 +88,13 @@ selectAspectRatio currentAR =
 selectPAR : Model -> Html Msg
 selectPAR model =
     let
-        ( msg, iconClass ) =
+        ( fade, iconClass ) =
             case model.helpPanel.open of
                 False ->
-                    ( FadeIn PARHelp OpenHelpPanel, "fa-question-circle" )
+                    ( FadeIn, "fa-question-circle" )
 
                 True ->
-                    ( FadeOut PARHelp CloseHelpPanel, "fa-caret-up" )
+                    ( FadeOut, "fa-caret-up" )
 
         parSelect =
             div [ class "field is-horizontal" ]
@@ -104,7 +104,7 @@ selectPAR model =
                 , div [ class "field-body" ]
                     [ renderSelect model.par ChangePAR displayNameForPAR allPARs
                     , button
-                        [ class "button", id "par-help", onClick msg ]
+                        [ class "button", id "par-help", onClick (fade PARHelp ToggleHelpPanel) ]
                         [ span [ class "icon" ] [ i [ class <| "fa " ++ iconClass ] [] ] ]
                     ]
                 ]

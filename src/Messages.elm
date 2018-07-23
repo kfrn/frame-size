@@ -20,7 +20,6 @@ type Msg
     | ChangePAR PAR
     | Animate Animation.Msg
     | FadeIn ElementToStyle Msg
-    | OpenHelpPanel
+    | ToggleHelpPanel
     | FadeOut ElementToStyle Msg
-    | CloseHelpPanel
     | NoOp

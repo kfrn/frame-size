@@ -100,9 +100,15 @@ update msg model =
             in
             ( setStyle elem newStyle model, Cmd.none )
 
-        OpenHelpPanel ->
-            -- TODO: why not toggle this ??
-            ( { model | helpPanel = openHelpPanel model.helpPanel }, Cmd.none )
+        ToggleHelpPanel ->
+            let
+                panel =
+                    model.helpPanel
+
+                newHelpPanel =
+                    { panel | open = not panel.open }
+            in
+            ( { model | helpPanel = newHelpPanel }, Cmd.none )
 
         FadeOut elem msg ->
             let
@@ -116,9 +122,6 @@ update msg model =
                         (elementToStyle elem model)
             in
             ( setStyle elem newStyle model, Cmd.none )
-
-        CloseHelpPanel ->
-            ( { model | helpPanel = closeHelpPanel model.helpPanel }, Cmd.none )
 
         NoOp ->
             ( model, Cmd.none )
