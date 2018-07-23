@@ -104,7 +104,7 @@ div.app-footer {
 }
 
 #number-inputs input {
-  max-width: 130px;
+  max-width: 95px;
 }
 
 #number-inputs input::placeholder {
