@@ -5,13 +5,13 @@ import PixelAspectRatio exposing (PAR(..), sdHeight, sdWidth)
 import Types exposing (..)
 
 
-heightFromWidth : AspectRatio -> PAR -> (Width -> Height)
-heightFromWidth ratio par =
+heightFromWidth : AspectRatio -> (Width -> Height)
+heightFromWidth ratio =
     case ratio of
         Academy ->
             academyHeight
 
-        SD ->
+        SD par ->
             sdHeight par
 
         HD ->
@@ -27,13 +27,13 @@ heightFromWidth ratio par =
             widescreen239Height
 
 
-widthFromHeight : AspectRatio -> PAR -> (Height -> Width)
-widthFromHeight ratio par =
+widthFromHeight : AspectRatio -> (Height -> Width)
+widthFromHeight ratio =
     case ratio of
         Academy ->
             academyWidth
 
-        SD ->
+        SD par ->
             sdWidth par
 
         HD ->

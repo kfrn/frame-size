@@ -1,7 +1,7 @@
 module Messages exposing (ElementToStyle(..), Msg(..))
 
 import Animation
-import AspectRatios exposing (AspectRatio)
+import AspectRatios exposing (AspectRatio_UI)
 import PixelAspectRatio exposing (PAR)
 
 
@@ -9,12 +9,8 @@ type ElementToStyle
     = PARHelp
 
 
-
--- | Ratio
-
-
 type Msg
-    = ChangeAspectRatio AspectRatio
+    = ChangeAspectRatio AspectRatio_UI
     | UpdateWidth String
     | UpdateHeight String
     | ChangePAR PAR

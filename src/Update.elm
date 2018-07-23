@@ -2,33 +2,27 @@ module Update exposing (update)
 
 import Animation
 import Animation.Messenger
-import AspectRatios exposing (AspectRatio(..))
+import AspectRatios exposing (AspectRatio(..), uiToAR)
 import Calculate exposing (heightFromWidth, widthFromHeight)
 import Messages exposing (ElementToStyle(..), Msg(..))
 import Model exposing (HelpPanel, Model)
-import PixelAspectRatio exposing (PAR(..))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ChangeAspectRatio newRatio ->
+        ChangeAspectRatio uiRatio ->
             let
-                newPAR =
-                    case newRatio of
-                        SD ->
-                            model.par
-
-                        _ ->
-                            Square
+                newRatio =
+                    uiToAR uiRatio
 
                 newHeight =
                     model.width
                         |> Maybe.andThen
-                            (\w -> Just <| heightFromWidth newRatio newPAR w)
+                            (\w -> Just <| heightFromWidth newRatio w)
 
                 newModel =
-                    { model | aspectRatio = newRatio, height = newHeight, par = newPAR }
+                    { model | aspectRatio = newRatio, height = newHeight }
             in
             ( newModel, Cmd.none )
 
@@ -37,7 +31,7 @@ update msg model =
                 Ok width ->
                     let
                         newHeight =
-                            Just <| heightFromWidth model.aspectRatio model.par width
+                            Just <| heightFromWidth model.aspectRatio width
 
                         newModel =
                             { model | width = Just width, height = newHeight }
@@ -52,7 +46,7 @@ update msg model =
                 Ok height ->
                     let
                         newWidth =
-                            Just <| widthFromHeight model.aspectRatio model.par height
+                            Just <| widthFromHeight model.aspectRatio height
 
                         newModel =
                             { model | height = Just height, width = newWidth }
@@ -64,13 +58,16 @@ update msg model =
 
         ChangePAR newPAR ->
             let
+                newAspectRatio =
+                    SD newPAR
+
                 newWidth =
                     model.height
                         |> Maybe.andThen
-                            (\h -> Just <| widthFromHeight model.aspectRatio newPAR h)
+                            (\h -> Just <| widthFromHeight newAspectRatio h)
 
                 newModel =
-                    { model | par = newPAR, width = newWidth }
+                    { model | aspectRatio = newAspectRatio, width = newWidth }
             in
             ( newModel, Cmd.none )
 

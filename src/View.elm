@@ -1,14 +1,13 @@
 module View exposing (view)
 
 import Animation
-import Animation.Messenger
-import AspectRatios exposing (AspectRatio(..), allAspectRatios, displayNameForAspectRatio)
-import Html exposing (Html, b, button, div, em, h1, i, img, input, label, nav, p, span, text)
+import AspectRatios exposing (AspectRatio(..), AspectRatio_UI(..), allAspectRatios, arToUI, displayNameForAspectRatio)
+import Html exposing (Html, b, button, div, em, i, img, input, label, nav, p, span, text)
 import Html.Attributes exposing (attribute, class, id, placeholder, src, step, type_, value)
 import Html.Events exposing (onClick, onInput)
 import Links exposing (LinkName(..), link)
 import Messages exposing (ElementToStyle(..), Msg(..))
-import Model exposing (Model)
+import Model exposing (HelpPanel, Model)
 import PixelAspectRatio exposing (..)
 import Round
 import ViewHelpers exposing (renderSelect)
@@ -66,9 +65,18 @@ calculator model =
 
 selectRatios : Model -> Html Msg
 selectRatios model =
+    let
+        selectPAR =
+            case model.aspectRatio of
+                SD par ->
+                    parSection par model.helpPanel model.aspectRatio
+
+                _ ->
+                    div [] []
+    in
     div []
         [ selectAspectRatio model.aspectRatio
-        , selectPAR model
+        , selectPAR
         ]
 
 
@@ -80,21 +88,19 @@ selectAspectRatio currentAR =
                 [ label [] [ text "Choose aspect ratio: " ]
                 ]
             , div [ class "field-body" ]
-                [ renderSelect currentAR ChangeAspectRatio displayNameForAspectRatio allAspectRatios ]
+                [ renderSelect (arToUI currentAR) ChangeAspectRatio displayNameForAspectRatio allAspectRatios ]
             ]
         ]
 
 
-selectPAR : Model -> Html Msg
-selectPAR model =
+parSection : PAR -> HelpPanel -> AspectRatio -> Html Msg
+parSection par helpPanel aspectRatio =
     let
         ( msg, iconClass ) =
-            case model.helpPanel.open of
-                False ->
-                    ( FadeIn PARHelp OpenHelpPanel, "fa-question-circle" )
-
-                True ->
-                    ( FadeOut PARHelp CloseHelpPanel, "fa-caret-up" )
+            if helpPanel.open then
+                ( FadeOut PARHelp CloseHelpPanel, "fa-caret-up" )
+            else
+                ( FadeIn PARHelp OpenHelpPanel, "fa-question-circle" )
 
         parSelect =
             div [ class "field is-horizontal" ]
@@ -102,29 +108,29 @@ selectPAR model =
                     [ label [] [ text "Choose a pixel aspect ratio: " ]
                     ]
                 , div [ class "field-body" ]
-                    [ renderSelect model.par ChangePAR displayNameForPAR allPARs
+                    [ renderSelect par ChangePAR displayNameForPAR allPARs
                     , button
                         [ class "button", id "par-help", onClick msg ]
                         [ span [ class "icon" ] [ i [ class <| "fa " ++ iconClass ] [] ] ]
                     ]
                 ]
     in
-    case model.aspectRatio of
-        SD ->
+    case aspectRatio of
+        SD _ ->
             div []
                 [ div [ id "select-par", class "select-ratio" ] [ parSelect ]
-                , div [] [ helpPanel model.helpPanel.open model.helpPanel.style ]
+                , div [] [ renderHelpPanel helpPanel ]
                 ]
 
         _ ->
             div [] []
 
 
-helpPanel : Bool -> Animation.Messenger.State Msg -> Html Msg
-helpPanel panelOpen style =
-    case panelOpen of
+renderHelpPanel : HelpPanel -> Html Msg
+renderHelpPanel helpPanel =
+    case helpPanel.open of
         True ->
-            div (Animation.render style ++ [ id "help-panel" ])
+            div (Animation.render helpPanel.style ++ [ id "help-panel" ])
                 [ p []
                     [ p [] [ b [] [ text "Wait - non-square pixels?" ] ]
                     , p []
@@ -213,7 +219,7 @@ referenceImage ratio =
                 Academy ->
                     "Academy"
 
-                SD ->
+                SD _ ->
                     "4_3"
 
                 HD ->
